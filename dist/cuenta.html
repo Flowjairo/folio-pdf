@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mi cuenta · Folio PDF</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f26345">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/base.css">
+<style>
+/* Layout: columna única con tarjeta de plan (estado y vencimiento), uso de hoy, aviso del pago que vuelve de Wompi e historial. */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:720px;margin:0 auto;padding-block:22px 10px}
+.top nav{display:flex;align-items:center;gap:6px}
+.wrap{max-width:720px;margin:18px auto 0;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,5vw,40px);letter-spacing:-.045em;line-height:1.05;margin:6px 0 2px}
+.sub{margin:0;color:var(--ink-soft)}
+.card{border-radius:var(--r-shell);padding:6px}
+.card .core{padding:24px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.state{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:999px}
+.state.on{background:var(--ok-wash);color:var(--ok)}
+.state.off{background:var(--shell);color:var(--ink-soft)}
+.big{font-family:var(--display);font-size:26px;font-weight:800;letter-spacing:-.03em;margin:12px 0 4px}
+.meter{height:10px;border-radius:999px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--hair);overflow:hidden;margin:12px 0 6px}
+.meter i{display:block;height:100%;background:var(--primary);border-radius:999px;transition:width .4s var(--ease-out)}
+.hist{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column}
+.hist li{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--hair);font-size:14.5px;color:var(--ink-soft)}
+.hist li:first-child{border-top:none}
+.hist b{color:var(--ink);font-weight:600}
+.pill-s{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill-s.ok{background:var(--ok-wash);color:var(--ok)}
+.pill-s.warn{background:var(--warn-wash);color:var(--warn)}
+.pill-s.err{background:var(--danger-wash);color:var(--danger)}
+h2{margin:0;font-family:var(--display);font-size:19px;letter-spacing:-.02em}
+.busy{display:inline-flex;align-items:center;gap:10px;color:var(--ink-soft)}
+</style>
+<script src="/config.js"></script>
+<script src="/vendor/supabase.js"></script>
+<script src="/auth.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/" aria-label="Folio PDF, inicio"><span class="mk"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M10 7h13v18H10z" stroke="currentColor" stroke-width="2"/><path d="M6 21V4h13M14 13h5m-5 5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span>folio<span class="p">PDF</span><span class="d">.</span></span></a>
+  <nav><a class="link" href="/#herramientas">Herramientas</a><button class="link" type="button" id="salir">Salir</button></nav>
+</header>
+
+<main class="wrap">
+  <div>
+    <p class="eyebrow"><i></i>Mi cuenta</p>
+    <h1 id="hola">Hola</h1>
+    <p class="sub" id="correo"></p>
+  </div>
+
+  <p class="note" id="pagoMsg" role="status" hidden></p>
+
+  <section class="card bezel"><div class="core" id="planBox"><span class="busy"><span class="spin"></span>Cargando tu plan…</span></div></section>
+
+  <section class="card bezel" id="usoCard" hidden><div class="core">
+    <div class="row"><h2>Operaciones gratis de hoy</h2><span id="usoTxt" class="fine"></span></div>
+    <div class="meter" aria-hidden="true"><i id="usoBar" style="width:0"></i></div>
+    <p class="fine">Se reinician cada día a medianoche (hora de Colombia).</p>
+  </div></section>
+
+  <section class="card bezel" id="histCard" hidden><div class="core">
+    <h2>Tus pagos</h2>
+    <ul class="hist" id="hist"></ul>
+  </div></section>
+</main>
+
+<footer class="foot" style="max-width:720px;margin-inline:auto">
+  <span>Folio PDF · © 2026</span>
+  <span><a href="/precios">Planes</a> · <a href="/privacidad">Privacidad</a> · <a href="/terminos">Términos</a></span>
+</footer>
+<script src="/cuenta.js"></script>
+</body>
+</html>

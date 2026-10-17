@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Planes y precios · Folio PDF</title>
+<meta name="description" content="3 operaciones gratis al día o todas las herramientas sin límite desde $14.900 al mes.">
+<meta name="theme-color" content="#f26345">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/base.css">
+<style>
+/* Layout: tres columnas de planes (gratis, mensual, anual destacado); en móvil se apilan con el anual primero. */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1040px;margin:0 auto;padding-block:22px 10px}
+.top nav{display:flex;align-items:center;gap:6px}
+.hero{max-width:640px;margin:34px auto 30px;text-align:center}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5.4vw,52px);letter-spacing:-.05em;line-height:1.05;margin:14px 0 12px;text-wrap:balance}
+.hero h1 span{color:var(--primary)}
+.hero p{margin:0;color:var(--ink-soft);font-size:16.5px;line-height:1.55}
+.plans{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+@media (max-width:880px){.plans{grid-template-columns:1fr;max-width:460px}.plan.best{order:-1}}
+.plan{border-radius:var(--r-shell);padding:6px;display:flex}
+.plan .core{flex:1;padding:26px 24px 24px;display:flex;flex-direction:column;gap:16px}
+.plan.best .core{box-shadow:inset 0 0 0 2px var(--primary),var(--shadow-soft)}
+.tag{align-self:flex-start;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:var(--primary-wash);color:var(--primary-hover)}
+.tag.soft{background:var(--shell);color:var(--ink-soft)}
+.plan h2{margin:0;font-family:var(--display);font-size:22px;letter-spacing:-.03em}
+.price{display:flex;align-items:baseline;gap:6px;margin:0}
+.price b{font-family:var(--display);font-size:40px;letter-spacing:-.05em;line-height:1}
+.price span{color:var(--ink-faint);font-size:14.5px}
+.save{margin:-8px 0 0;font-size:13.5px;color:var(--ok);font-weight:600}
+.feat{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;flex:1}
+.feat li{display:flex;gap:9px;align-items:flex-start;color:var(--ink-soft);font-size:14.5px;line-height:1.4}
+.feat svg{width:17px;height:17px;flex:none;margin-top:1px;color:var(--ok)}
+.plan .cta,.plan .pill{width:100%;justify-content:center}
+.plan .cta{justify-content:space-between}
+.msg{max-width:520px;margin:18px auto 0}
+.fine-c{max-width:640px;margin:26px auto 0;text-align:center}
+.faq{max-width:720px;margin:44px auto 0;display:flex;flex-direction:column;gap:10px}
+.faq details{background:var(--surface);border-radius:16px;box-shadow:inset 0 0 0 1px var(--hair);padding:16px 18px}
+.faq summary{cursor:pointer;font-weight:600;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq p{margin:10px 0 0;color:var(--ink-soft);font-size:15px;line-height:1.55}
+</style>
+<script src="/config.js"></script>
+<script src="/vendor/supabase.js"></script>
+<script src="/auth.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/" aria-label="Folio PDF, inicio"><span class="mk"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M10 7h13v18H10z" stroke="currentColor" stroke-width="2"/><path d="M6 21V4h13M14 13h5m-5 5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span>folio<span class="p">PDF</span><span class="d">.</span></span></a>
+  <nav><a class="link" href="/#herramientas">Herramientas</a><a class="link strong" href="/cuenta" id="navCuenta">Mi cuenta</a></nav>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow"><i></i>Planes</p>
+    <h1>Todas las herramientas, <span>sin límite.</span></h1>
+    <p>Empieza gratis con 3 operaciones al día. Cuando necesites más, elige un plan. Pagas una vez por el periodo: no hay cobros automáticos.</p>
+  </section>
+
+  <section class="plans" aria-label="Planes">
+    <article class="plan bezel">
+      <div class="core">
+        <span class="tag soft">Gratis</span>
+        <h2>Básico</h2>
+        <p class="price"><b>$0</b><span>siempre</span></p>
+        <ul class="feat">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>3 operaciones al día</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Las 16 herramientas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Tus archivos no salen de tu dispositivo</li>
+        </ul>
+        <a class="pill" href="/#herramientas">Usar gratis</a>
+      </div>
+    </article>
+
+    <article class="plan bezel">
+      <div class="core">
+        <span class="tag soft">Mensual</span>
+        <h2>Pro mensual</h2>
+        <p class="price"><b>$14.900</b><span>/ mes</span></p>
+        <ul class="feat">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Operaciones ilimitadas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Las 16 herramientas, incluidas Corregir texto y Contraseña</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Paga con tarjeta, PSE o Nequi</li>
+        </ul>
+        <button class="cta" type="button" data-plan="mensual"><span class="lbl">Elegir mensual</span><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span></button>
+      </div>
+    </article>
+
+    <article class="plan bezel best">
+      <div class="core">
+        <span class="tag">Más conveniente</span>
+        <h2>Pro anual</h2>
+        <p class="price"><b>$89.900</b><span>/ año</span></p>
+        <p class="save">Equivale a $7.492 al mes · ahorras 50 %</p>
+        <ul class="feat">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Todo lo del plan mensual</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Un solo pago para todo el año</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Paga con tarjeta, PSE o Nequi</li>
+        </ul>
+        <button class="cta" type="button" data-plan="anual"><span class="lbl">Elegir anual</span><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span></button>
+      </div>
+    </article>
+  </section>
+
+  <p class="note err msg" id="msg" role="alert" hidden></p>
+  <p class="fine fine-c">El pago lo procesa Wompi (Bancolombia). Folio PDF no ve ni guarda los datos de tu tarjeta. Si ya tienes un plan activo, el tiempo nuevo se suma al que te queda.</p>
+
+  <section class="faq" aria-label="Preguntas sobre los planes">
+    <details><summary>¿Se renueva solo?</summary><p>No. Pagas el mes o el año completo y, unos días antes de que venza, te avisamos por correo para que decidas si renuevas.</p></details>
+    <details><summary>¿Qué cuenta como una operación?</summary><p>Cada vez que generas o descargas un resultado: unir, dividir, comprimir, convertir, firmar, descargar un PDF corregido o poner o quitar una contraseña. Abrir y mirar un documento no cuenta.</p></details>
+    <details><summary>¿Cuándo se activa el plan?</summary><p>En cuanto Wompi aprueba el pago, normalmente en segundos. Con PSE puede tardar unos minutos mientras el banco confirma.</p></details>
+  </section>
+</main>
+
+<footer class="foot" style="max-width:1040px;margin-inline:auto">
+  <span>Folio PDF · © 2026</span>
+  <span><a href="/privacidad">Privacidad</a> · <a href="/terminos">Términos</a></span>
+</footer>
+<script src="/precios.js"></script>
+</body>
+</html>

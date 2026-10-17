@@ -726,16 +726,28 @@ window.pdfjsLib = pdfjsLib;
   dlBtn.addEventListener("click", function () {
     if (!S.workBytes) return;
     dlBtn.disabled = true;
-    commitEdits().then(function (bytes) {
+    usarOperacion().then(function (ok) {
+      if (!ok) { dlBtn.disabled = false; return; }
+      return commitEdits().then(function (bytes) {
       busy(false);
       dlBtn.disabled = false;
       showResult(bytes, outName(), "Tu PDF está listo", downloadText());
+      });
     }).catch(function (e) {
       busy(false);
       dlBtn.disabled = false;
       toast("No se pudo generar el PDF: " + errMsg(e), "err");
     });
   });
+
+  // Cada descarga, cifrado o descifrado cuenta como una operación (3 gratis al día).
+  function usarOperacion() {
+    if (!window.FolioLimite) return Promise.resolve(true);
+    return window.FolioLimite.usar();
+  }
+  if (window.FolioLimite) window.FolioLimite.onRestantes = function (n) {
+    if (n <= 1) toast(n === 1 ? "Te queda 1 operación gratis hoy." : "Esta fue tu última operación gratis de hoy.");
+  };
 
   /* ================= contraseña ================= */
 
@@ -818,11 +830,16 @@ window.pdfjsLib = pdfjsLib;
       if (!a) { lockErr.hidden = false; lockErr.textContent = "Escribe la contraseña que quieres ponerle."; p1.input.focus(); return; }
       if (a !== b) { lockErr.hidden = false; lockErr.textContent = "Las dos contraseñas no coinciden."; p2.input.select(); return; }
       btn.disabled = true;
-      commitEdits().then(function (bytes) {
+      usarOperacion().then(function (ok) {
+        if (!ok) { btn.disabled = false; return null; }
+        return commitEdits();
+      }).then(function (bytes) {
+        if (!bytes) return null;
         busy(true, "Cifrando tu PDF…");
         return qpdf(["/in.pdf", "/out.pdf", "--encrypt", "--user-password=" + a, "--owner-password=" + a, "--bits=256", "--"], bytes);
       }).then(function (r) {
         busy(false); btn.disabled = false;
+        if (!r) return;
         if (r.code !== 0 || !r.out) { lockErr.hidden = false; lockErr.textContent = "No se pudo cifrar el archivo. Puede estar dañado."; return; }
         p1.input.value = ""; p2.input.value = "";
         showResult(r.out, baseName(S.name) + "-protegido.pdf", "PDF protegido", "Quien lo reciba necesitará la contraseña para abrirlo.");
@@ -836,11 +853,16 @@ window.pdfjsLib = pdfjsLib;
 
   function runDecrypt() {
     lockErr.hidden = true;
-    commitEdits().then(function (bytes) {
+    usarOperacion().then(function (ok) {
+      if (!ok) return null;
+      return commitEdits();
+    }).then(function (bytes) {
+      if (!bytes) return null;
       busy(true, "Quitando la protección…");
       return qpdf(["--decrypt", "/in.pdf", "/out.pdf"], bytes);
     }).then(function (r) {
       busy(false);
+      if (!r) return;
       if (r.code !== 0 || !r.out) { lockErr.hidden = false; lockErr.textContent = "No se pudo quitar la protección de este archivo."; return; }
       S.workBytes = r.out;
       S.protection = "abierto";

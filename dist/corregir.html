@@ -509,6 +509,7 @@ svg{flex:none}
 <script src="/config.js"></script>
 <script src="/vendor/supabase.js"></script>
 <script src="/auth.js"></script>
+<script src="/limite.js"></script>
 </head>
 <body>
 
@@ -518,9 +519,10 @@ svg{flex:none}
     <a class="f-brand" href="/" aria-label="Folio PDF, inicio"><span class="mk"><svg viewBox="0 0 32 32" fill="none"><path d="M10 7h13v18H10z" stroke="currentColor" stroke-width="2"/><path d="M6 21V4h13M14 13h5m-5 5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span>folio<span class="p">PDF</span><span class="d">.</span></span></a>
     <nav class="f-nav" aria-label="Principal">
       <a href="/#herramientas" class="hide-sm">Herramientas</a>
+      <a href="/precios" class="hide-sm">Precios</a>
       <a href="/entrar?modo=entrar" id="navLogin">Entrar</a>
       <a class="f-btn pri" href="/entrar" id="navSignup">Crear cuenta</a>
-      <span class="f-user" id="navUser" hidden><span class="f-av" id="navAvatar" aria-hidden="true"></span><span id="navName" class="hide-sm"></span><button class="f-btn sec" type="button" id="navLogout">Salir</button></span>
+      <span class="f-user" id="navUser" hidden><a href="/cuenta" class="f-user" title="Mi cuenta" style="color:inherit;text-decoration:none"><span class="f-av" id="navAvatar" aria-hidden="true"></span><span id="navName" class="hide-sm"></span></a><button class="f-btn sec" type="button" id="navLogout">Salir</button></span>
       <button type="button" id="navPick" class="f-hidden">Abrir PDF</button>
       <button type="button" id="burger" class="f-hidden" aria-expanded="false"><span></span></button>
     </nav>

@@ -95,6 +95,28 @@
       if (!client) return;
       client.auth.onAuthStateChange(function (event, session) { fn(event, session); });
     },
+    // Plan y usos (tablas de Supabase protegidas con RLS; ver supabase/migrations).
+    estadoPlan: function () {
+      if (!client) return Promise.resolve(null);
+      return client.rpc("estado_plan").then(function (r) { if (r.error) throw r.error; return r.data; });
+    },
+    registrarUso: function () {
+      if (!client) return Promise.resolve({ ok: true, sinConfigurar: true });
+      return client.rpc("registrar_uso").then(function (r) { if (r.error) throw r.error; return r.data; });
+    },
+    funcion: function (nombre, cuerpo) {
+      if (!client) return Promise.reject(new Error("Inicio de sesión sin configurar."));
+      return client.functions.invoke(nombre, { body: cuerpo || {} }).then(function (r) {
+        if (r.error) {
+          var ctx = r.error.context;
+          if (ctx && typeof ctx.json === "function") {
+            return ctx.json().then(function (j) { throw new Error((j && j.error) || r.error.message); }, function () { throw r.error; });
+          }
+          throw r.error;
+        }
+        return r.data;
+      });
+    },
     signOut: function () {
       if (!client) return Promise.resolve();
       return client.auth.signOut().catch(function () {});

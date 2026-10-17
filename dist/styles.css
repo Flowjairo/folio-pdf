@@ -21,3 +21,4 @@
 @media(max-width:1100px){.nav-right{gap:14px}}
 @media(max-width:850px){nav a:nth-child(3){display:none}.nav-name{display:none}}
 @media(max-width:620px){nav{display:none}.nav-auth{gap:10px;font-size:12px}.nav-cta{min-height:36px;padding:8px 12px;font-size:11px}}
+.nav-me{display:flex;align-items:center;gap:10px}.nav-me:hover .nav-name{color:var(--accent)}

@@ -7,6 +7,6 @@ window.FOLIO_CONFIG = {
   SUPABASE_URL: "https://aihpyqkuqzxmbygxclby.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_5NNctz_veHBF-0mEIrgm8Q_N7ssEuIm",
   GOOGLE: true,
-  POLITICA_VERSION: "2026-10"
+  POLITICA_VERSION: "2026-10-2"
 };
 window.TALLER_CONFIG = window.FOLIO_CONFIG;
