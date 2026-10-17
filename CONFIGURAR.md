@@ -3,11 +3,12 @@
 Sitio estático (HTML + JavaScript) publicado en Vercel. Todo lo que se publica está en `dist/`.
 Los PDF se procesan en el navegador; Supabase solo guarda las cuentas (nombre y correo).
 
-- **Sitio:** https://folio-pdf-eight.vercel.app
+- **Sitio:** https://www.foliopdf.site (dominio `foliopdf.site` comprado en GoDaddy; la versión sin www redirige a www)
+- **Dirección de respaldo de Vercel:** https://folio-pdf-eight.vercel.app
 - **Repositorio:** https://github.com/Flowjairo/folio-pdf (cada cambio en `main` se publica solo)
 - **Vercel:** proyecto `folio-pdf` en el equipo «Flow»
-- **Supabase:** proyecto `aihpyqkuqzxmbygxclby` (el mismo que usaba Taller PDF)
-- **Google Cloud:** proyecto `taller-pdf`, cliente OAuth «Taller PDF web»
+- **Supabase:** proyecto `aihpyqkuqzxmbygxclby` (en el panel todavía se llama «Taller PDF»; es solo el nombre)
+- **Google Cloud:** proyecto con ID `taller-pdf` (el ID no se puede cambiar); la app se muestra como «Folio PDF»
 
 ## Estado
 
@@ -50,8 +51,8 @@ y añade cabeceras de seguridad. Ninguna librería se carga desde un CDN.
 
 En **Authentication → URL Configuration**:
 
-- **Site URL:** `https://folio-pdf-eight.vercel.app`
-- **Redirect URLs:** `https://folio-pdf-eight.vercel.app/**` (y la de Taller, mientras exista)
+- **Site URL:** `https://www.foliopdf.site`
+- **Redirect URLs:** `https://www.foliopdf.site/**` y `https://folio-pdf-eight.vercel.app/**`
 
 Si cambias de dominio, actualiza las dos.
 
@@ -60,12 +61,12 @@ Si cambias de dominio, actualiza las dos.
 El correo de fábrica de Supabase **solo envía a los miembros de tu equipo de Supabase y como
 máximo 2 mensajes por hora**. Con eso nadie más puede confirmar su cuenta ni recuperar la contraseña.
 
-1. Compra un dominio (por ejemplo `foliopdf.com`) y conéctalo al proyecto de Vercel.
+1. ✅ Dominio `foliopdf.site` conectado a Vercel (GoDaddy: A `@` → `216.198.79.1`, CNAME `www` → `b7fbbcde71ca0269.vercel-dns-017.com`).
 2. Crea una cuenta en un servicio de correo: **Resend** (gratis: 3.000 al mes, 100 al día)
    o **Brevo** (gratis: 300 al día).
 3. Verifica el dominio en ese servicio pegando sus registros DNS (SPF, DKIM).
 4. En Supabase → **Authentication → Emails → SMTP Settings** pon servidor, usuario, contraseña
-   y un remitente tipo `no-responder@foliopdf.com`.
+   y un remitente tipo `no-responder@foliopdf.site`.
 5. Vuelve a activar **Confirm email** en **Authentication → Sign In / Providers → User Signups**.
 6. Actualiza el paso 2 y la marca de Google con el dominio nuevo.
 
@@ -74,11 +75,11 @@ máximo 2 mensajes por hora**. Con eso nadie más puede confirmar su cuenta ni r
 - **URI de redireccionamiento autorizado** del cliente OAuth:
   `https://aihpyqkuqzxmbygxclby.supabase.co/auth/v1/callback`
 - **Desarrollo de la marca:** nombre de la app, página principal, privacidad y términos
-  del sitio, y dominios autorizados `folio-pdf-eight.vercel.app` y `aihpyqkuqzxmbygxclby.supabase.co`.
+  del sitio, y dominios autorizados `foliopdf.site`, `folio-pdf-eight.vercel.app` y `aihpyqkuqzxmbygxclby.supabase.co`.
 - **Público:** «En producción». Solo pide nombre y correo, así que no necesita revisión de Google.
 - **Correo de asistencia y de contacto:** `tallerpdf.soporte@gmail.com`
   (propietario del proyecto junto con `juanes09hernandez@gmail.com`).
-  Cuando haya dominio, cámbialo a `soporte@tu-dominio`.
+  Cuando el correo del dominio funcione, cámbialo a `soporte@foliopdf.site`.
 
 ## 5. Contraseña mínima ✅
 
