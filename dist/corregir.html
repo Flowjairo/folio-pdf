@@ -503,7 +503,7 @@ svg{flex:none}
 @media(max-width:620px){.f-head{height:66px}.f-head .in{padding:0 18px}.f-brand{font-size:22px}.f-nav .hide-sm{display:none}.f-start{margin-top:28px}.f-drop{padding:34px 16px}}
 </style>
 
-<script src="/vendor/corregir/pdf.min.js"></script>
+<script type="module">import * as pdfjsLib from "/vendor/pdf.mjs"; window.pdfjsLib = pdfjsLib;</script>
 <script src="/vendor/corregir/pdf-lib.min.js"></script>
 <script src="/vendor/corregir/qpdf.js"></script>
 <script src="/config.js"></script>
@@ -716,12 +716,12 @@ svg{flex:none}
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script>
+<script type="module">
 (function () {
   "use strict";
 
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "/vendor/corregir/pdf.worker.min.js";
-  var FONT_URL = "/vendor/corregir/standard_fonts/";
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/vendor/pdf.worker.mjs";
+  var FONT_URL = "/vendor/standard_fonts/";
   var WASM_URL = "/vendor/corregir/qpdf.wasm";
 
   var $ = function (id) { return document.getElementById(id); };
@@ -1028,7 +1028,7 @@ svg{flex:none}
   function openPdf(bytes) {
     busy(true, "Abriendo el documento…");
     var old = S.pdf;
-    return pdfjsLib.getDocument({ data: bytes.slice(0), standardFontDataUrl: FONT_URL }).promise.then(function (doc) {
+    return pdfjsLib.getDocument({ data: bytes.slice(0), standardFontDataUrl: FONT_URL, cMapUrl: "/vendor/cmaps/", cMapPacked: true, wasmUrl: "/vendor/wasm/", isEvalSupported: false, enableXfa: false }).promise.then(function (doc) {
       busy(false);
       if (old) { try { old.destroy(); } catch (e) {} }
       S.pdf = doc; S.pages = doc.numPages;
@@ -1072,7 +1072,7 @@ svg{flex:none}
       stage.style.width = Math.floor(vpCss.width) + "px";
       stage.style.height = Math.floor(vpCss.height) + "px";
       layer.innerHTML = "";
-      renderTask = page.render({ canvasContext: ctx, viewport: vpRen });
+      renderTask = page.render({ canvas: canvas, canvasContext: ctx, viewport: vpRen });
       return renderTask.promise.then(function () {
         renderTask = null;
         if (seq !== renderSeq) return null;

@@ -34,7 +34,7 @@ Los PDF se procesan en el navegador; Supabase solo guarda las cuentas (nombre y 
 | `config.js` | Datos de Supabase y opciones (Google, versión de la política). |
 | `auth.js` | Lógica de sesión compartida (`window.FolioAuth`). |
 | `assets/base.css` | Estilos de las páginas de cuenta y legales. |
-| `vendor/` | Librerías guardadas en el propio sitio: pdf.js, pdf-lib, JSZip, Tesseract, Supabase y, en `vendor/corregir/`, las de Corregir texto y qpdf. |
+| `vendor/` | Librerías guardadas en el propio sitio: pdf.js, pdf-lib, JSZip, Tesseract, Supabase y, en `vendor/corregir/`, pdf-lib y qpdf para Corregir texto. Todo pdf.js es 5.6.205 con `isEvalSupported: false` (CVE-2024-4367). |
 
 `vercel.json` (en la raíz) publica `dist/`, activa URLs limpias (`/entrar` en vez de `/entrar.html`)
 y añade cabeceras de seguridad. Ninguna librería se carga desde un CDN.

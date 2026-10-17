@@ -49,4 +49,4 @@ OCR de escaneos en inglés a TXT, hasta 20 páginas por operación. Motor Tesser
 - Registro obligatorio con Supabase (correo y contraseña, o Google). Sin sesión, abrir una herramienta lleva a `/entrar` y luego regresa a la misma herramienta.
 - `/corregir`: corrige líneas del texto original (tapa la línea y escribe la nueva encima; el texto anterior puede seguir dentro del archivo), añade texto y tapa zonas.
 - `/corregir?modo=contrasena`: pone, cambia o quita contraseñas con qpdf-wasm 0.3.0.
-- Librerías de esta página en `dist/vendor/corregir/`: pdf.js 3.11.174 legacy, pdf-lib 1.17.1 y qpdf-wasm 0.3.0 (mismos archivos que publica npm).
+- Esta página usa el mismo pdf.js 5.6.205 de `dist/vendor/` con `isEvalSupported: false` (protege contra CVE-2024-4367). En `dist/vendor/corregir/` quedan pdf-lib 1.17.1 y qpdf-wasm 0.3.0 (mismos archivos que publica npm).
