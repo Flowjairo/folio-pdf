@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Entrar · Folio PDF</title>
+<meta name="description" content="Entra o crea tu cuenta gratis en Folio PDF para usar todas sus herramientas.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/base.css">
+<style>
+/* Layout: una sola tarjeta centrada en doble marco; las vistas (entrar, crear cuenta, recuperar, revisar correo) se alternan dentro. */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:460px;margin:0 auto;padding-block:22px 10px}
+.wrap{max-width:460px;margin:12px auto 0}
+.card-shell{border-radius:38px;padding:7px}
+.card{border-radius:31px;padding:30px 28px 26px;display:flex;flex-direction:column;gap:18px}
+@media (max-width:440px){.card{padding:24px 20px 22px}}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,6vw,34px);letter-spacing:-.045em;line-height:1.05;margin:0;text-wrap:balance}
+.lede{margin:-8px 0 0;color:var(--ink-soft);font-size:15.5px}
+
+.seg{position:relative;display:flex;gap:2px;background:var(--shell);border-radius:999px;padding:4px;box-shadow:inset 0 0 0 1px var(--hair)}
+.seg-ind{position:absolute;inset:4px;border-radius:999px;background:var(--surface);box-shadow:0 0 0 1px var(--hair);clip-path:inset(0 50% 0 0 round 999px);transition:clip-path 260ms var(--ease-in-out)}
+.seg button{position:relative;z-index:1;flex:1;border:none;background:transparent;color:var(--ink-soft);font-weight:600;font-size:14.5px;padding:10px 14px;border-radius:999px;cursor:pointer;transition:color 200ms ease,transform 160ms var(--ease-out)}
+.seg button:active{transform:scale(.97)}
+.seg button[aria-selected="true"]{color:var(--ink)}
+
+.google{width:100%}
+.google svg{width:18px;height:18px}
+.or{display:flex;align-items:center;gap:12px;color:var(--ink-faint);font-size:13px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--hair-strong)}
+form{display:flex;flex-direction:column;gap:16px;margin:0}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:-6px}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ink-soft);line-height:1.45;cursor:pointer}
+.check input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;margin:0;border-radius:7px;background:var(--surface-2);box-shadow:inset 0 0 0 1.5px var(--hair-strong);cursor:pointer;display:grid;place-items:center;transition:background-color 150ms ease,box-shadow 150ms ease}
+.check input::after{content:"";width:6px;height:11px;border:solid var(--primary-ink);border-width:0 2px 2px 0;transform:rotate(45deg) scale(.6);margin-top:-3px;opacity:0;transition:transform 200ms var(--ease-out),opacity 120ms ease}
+.check input:checked{background:var(--primary);box-shadow:none}
+.check input:checked::after{opacity:1;transform:rotate(45deg) scale(1)}
+.check.bad input{box-shadow:inset 0 0 0 1.5px var(--danger),0 0 0 4px var(--danger-wash)}
+.check a{color:var(--ink);font-weight:600}
+.meter{display:flex;gap:4px;margin-top:9px;padding-inline:4px}
+.meter i{flex:1;height:4px;border-radius:2px;background:var(--hair-strong);transition:background-color 200ms ease}
+.meter[data-level="1"] i:nth-child(-n+1){background:var(--danger)}
+.meter[data-level="2"] i:nth-child(-n+2){background:var(--warn)}
+.meter[data-level="3"] i:nth-child(-n+3){background:var(--ok)}
+.meter[data-level="4"] i{background:var(--ok)}
+.legal{font-size:12.5px;color:var(--ink-faint);text-align:center;margin:0}
+.legal a{color:var(--ink-soft)}
+.mail-ico{width:60px;height:60px;border-radius:19px;display:grid;place-items:center;background:var(--primary-wash);color:var(--primary)}
+.mail-ico svg{width:28px;height:28px}
+.center{align-items:center;text-align:center}
+.busy{display:inline-flex;align-items:center;gap:10px}
+.view{display:flex;flex-direction:column;gap:18px}
+.view.enter{animation:viewIn 240ms var(--ease-out)}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){.view.enter{animation:none}.seg-ind{transition:none}}
+</style>
+<script src="/config.js"></script>
+<script src="/vendor/supabase.js"></script>
+<script src="/auth.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="/" aria-label="Folio PDF, inicio"><span class="mk"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M10 7h13v18H10z" stroke="currentColor" stroke-width="2"/><path d="M6 21V4h13M14 13h5m-5 5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span>folio<span class="p">PDF</span><span class="d">.</span></span></a>
+  <a class="link" href="/">Volver al inicio</a>
+</header>
+
+<main class="wrap">
+  <div class="bezel card-shell">
+    <div class="core card" id="card">
+
+      <p class="note warn" id="notConfigured" hidden>El inicio de sesión todavía no está configurado en este sitio: faltan los datos de Supabase en <code>config.js</code>.</p>
+      <p class="note ok" id="banner" hidden></p>
+
+      <!-- ========== ENTRAR / CREAR CUENTA ========== -->
+      <section class="view" id="vAuth">
+        <div>
+          <h1 id="authTitle">Crea tu cuenta gratis</h1>
+          <p class="lede" id="authLede" style="margin-top:8px">Necesitas una cuenta para usar las herramientas de Folio PDF. Toma menos de un minuto.</p>
+        </div>
+
+        <div class="seg" role="tablist" aria-label="Entrar o crear cuenta">
+          <span class="seg-ind" id="segInd" aria-hidden="true"></span>
+          <button role="tab" type="button" id="tabLogin" aria-selected="false">Entrar</button>
+          <button role="tab" type="button" id="tabSignup" aria-selected="true">Crear cuenta</button>
+        </div>
+
+        <button class="pill google" type="button" id="googleBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18"></path><path d="M12 3a14 14 0 0 0 0 18"></path></svg>
+          <span id="googleLabel">Continuar con Google</span>
+        </button>
+        <p class="legal" id="googleLegal">Al continuar con Google aceptas los <a href="/terminos" target="_blank" rel="noopener">Términos</a> y la <a href="/privacidad" target="_blank" rel="noopener">Política de tratamiento de datos</a>.</p>
+
+        <div class="or" id="orSep">o con tu correo</div>
+
+        <!-- Entrar -->
+        <form id="loginForm" novalidate hidden>
+          <div class="field">
+            <label for="loginEmail">Correo</label>
+            <div class="input"><input type="email" id="loginEmail" autocomplete="email" inputmode="email" required></div>
+          </div>
+          <div class="field">
+            <label for="loginPw">Contraseña</label>
+            <div class="pw"><input type="password" id="loginPw" autocomplete="current-password" required><button class="eye" type="button" data-eye="loginPw" aria-label="Mostrar u ocultar la contraseña">Ver</button></div>
+          </div>
+          <div class="row-between"><span></span><button class="link strong" type="button" id="toForgot">¿Olvidaste tu contraseña?</button></div>
+          <p class="note err" id="loginErr" hidden role="alert"></p>
+          <button class="cta cta-lg cta-wide" type="submit" id="loginBtn"><span class="lbl">Entrar</span><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></span></button>
+        </form>
+
+        <!-- Crear cuenta -->
+        <form id="signupForm" novalidate>
+          <div class="field">
+            <label for="suName">Nombre</label>
+            <div class="input"><input type="text" id="suName" autocomplete="name" required maxlength="80"></div>
+          </div>
+          <div class="field">
+            <label for="suEmail">Correo</label>
+            <div class="input"><input type="email" id="suEmail" autocomplete="email" inputmode="email" required></div>
+          </div>
+          <div class="field">
+            <label for="suPw">Contraseña</label>
+            <div class="pw"><input type="password" id="suPw" autocomplete="new-password" required minlength="8"><button class="eye" type="button" data-eye="suPw" aria-label="Mostrar u ocultar la contraseña">Ver</button></div>
+            <div class="meter" id="meter" data-level="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <p class="fine" id="pwHint">Mínimo 8 caracteres. Mezcla letras y números.</p>
+          </div>
+          <label class="check" id="consentRow">
+            <input type="checkbox" id="consent" required>
+            <span>Autorizo el tratamiento de mis datos personales según la <a href="/privacidad" target="_blank" rel="noopener">Política de tratamiento de datos</a> y acepto los <a href="/terminos" target="_blank" rel="noopener">Términos de uso</a>.</span>
+          </label>
+          <p class="note err" id="signupErr" hidden role="alert"></p>
+          <button class="cta cta-lg cta-wide" type="submit" id="signupBtn"><span class="lbl">Crear cuenta</span><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></span></button>
+        </form>
+      </section>
+
+      <!-- ========== RECUPERAR CONTRASEÑA ========== -->
+      <section class="view" id="vForgot" hidden>
+        <div>
+          <h1>Recupera tu contraseña</h1>
+          <p class="lede" style="margin-top:8px">Escribe el correo de tu cuenta y te enviaremos un enlace para elegir una contraseña nueva.</p>
+        </div>
+        <form id="forgotForm" novalidate>
+          <div class="field">
+            <label for="fgEmail">Correo</label>
+            <div class="input"><input type="email" id="fgEmail" autocomplete="email" inputmode="email" required></div>
+          </div>
+          <p class="note err" id="forgotErr" hidden role="alert"></p>
+          <button class="cta cta-lg cta-wide" type="submit" id="forgotBtn"><span class="lbl">Enviar enlace</span><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></span></button>
+        </form>
+        <button class="link" type="button" data-back style="align-self:center">Volver a entrar</button>
+      </section>
+
+      <!-- ========== REVISA TU CORREO ========== -->
+      <section class="view center" id="vCheck" hidden>
+        <div class="mail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg></div>
+        <h1 id="checkTitle">Revisa tu correo</h1>
+        <p class="lede" id="checkText" style="margin:0"></p>
+        <p class="fine">¿No llega? Mira en Spam o Promociones. Puede tardar un par de minutos.</p>
+        <p class="note err" id="checkErr" hidden role="alert"></p>
+        <button class="pill" type="button" id="resendBtn">Reenviar correo</button>
+        <button class="link" type="button" data-back>Volver a entrar</button>
+      </section>
+
+      <!-- ========== YA DENTRO ========== -->
+      <section class="view center" id="vDone" hidden>
+        <span class="busy"><span class="spin"></span>Entrando…</span>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="foot" style="max-width:460px;margin-inline:auto">
+  <span>Folio PDF · © 2026</span>
+  <span><a href="/privacidad">Privacidad</a> · <a href="/terminos">Términos</a></span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var A = window.TallerAuth;
+  var sb = A.client;
+  var $ = function (id) { return document.getElementById(id); };
+  var params = new URLSearchParams(location.search);
+  var next = A.safeNext(params.get("next") || "/");
+  var origin = location.origin;
+  var finishing = false;
+
+  var views = { auth: $("vAuth"), forgot: $("vForgot"), check: $("vCheck"), done: $("vDone") };
+  function show(name) {
+    Object.keys(views).forEach(function (k) {
+      var on = k === name;
+      if (on && views[k].hidden) { views[k].classList.remove("enter"); void views[k].offsetWidth; views[k].classList.add("enter"); }
+      views[k].hidden = !on;
+    });
+  }
+
+  function err(id, msg) { var n = $(id); n.hidden = !msg; if (msg) n.textContent = msg; }
+  function busyBtn(btn, on, label) {
+    btn.disabled = on;
+    btn.querySelector(".lbl").textContent = label;
+  }
+  function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+  function mark(input, bad) { input.parentElement.classList.toggle("bad", !!bad); }
+
+  /* ---------- pestañas ---------- */
+  var mode = "signup";
+  function setMode(m, focus) {
+    mode = m;
+    var login = m === "login";
+    $("tabLogin").setAttribute("aria-selected", String(login));
+    $("tabSignup").setAttribute("aria-selected", String(!login));
+    $("segInd").style.clipPath = login ? "inset(0 50% 0 0 round 999px)" : "inset(0 0 0 50% round 999px)";
+    $("loginForm").hidden = !login;
+    $("signupForm").hidden = login;
+    $("authTitle").textContent = login ? "Bienvenido de nuevo" : "Crea tu cuenta gratis";
+    $("authLede").textContent = login ? "Entra para seguir trabajando con tus PDF." : "Necesitas una cuenta para usar las herramientas de Folio PDF. Toma menos de un minuto.";
+    $("googleLabel").textContent = login ? "Entrar con Google" : "Registrarme con Google";
+    err("loginErr", ""); err("signupErr", "");
+    if (focus) setTimeout(function () { (login ? $("loginEmail") : $("suName")).focus(); }, 30);
+  }
+  $("tabLogin").addEventListener("click", function () { setMode("login", true); });
+  $("tabSignup").addEventListener("click", function () { setMode("signup", true); });
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-eye]"), function (b) {
+    b.addEventListener("click", function () {
+      var i = $(b.getAttribute("data-eye")), hidden = i.type === "password";
+      i.type = hidden ? "text" : "password"; b.textContent = hidden ? "Ocultar" : "Ver"; i.focus();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-back]"), function (b) {
+    b.addEventListener("click", function () { show("auth"); setMode("login", true); });
+  });
+
+  /* ---------- medidor de contraseña ---------- */
+  function strength(p) {
+    if (!p) return 0;
+    var s = 0;
+    if (p.length >= 8) s++;
+    if (/[a-zA-ZñÑ]/.test(p) && /\d/.test(p)) s++;
+    if (p.length >= 12) s++;
+    if (/[^a-zA-Z0-9]/.test(p) || (/[a-z]/.test(p) && /[A-Z]/.test(p))) s++;
+    return Math.max(1, s);
+  }
+  $("suPw").addEventListener("input", function () {
+    var lv = strength(this.value);
+    $("meter").setAttribute("data-level", String(lv));
+    $("pwHint").textContent = !this.value ? "Mínimo 8 caracteres. Mezcla letras y números." :
+      this.value.length < 8 ? "Te faltan " + (8 - this.value.length) + " caracteres." :
+      lv <= 2 ? "Aceptable. Más larga o con símbolos sería más segura." : "Buena contraseña.";
+    mark(this, false);
+  });
+  ["loginEmail", "loginPw", "suName", "suEmail", "fgEmail"].forEach(function (id) {
+    $(id).addEventListener("input", function () { mark(this, false); });
+  });
+  $("consent").addEventListener("change", function () { $("consentRow").classList.remove("bad"); });
+
+  /* ---------- sin configurar ---------- */
+  if (!A.configured) {
+    $("notConfigured").hidden = false;
+    Array.prototype.forEach.call(document.querySelectorAll("#card button, #card input"), function (n) { n.disabled = true; });
+  }
+  if (A.config.GOOGLE === false) { $("googleBtn").hidden = true; $("googleLegal").hidden = true; $("orSep").hidden = true; }
+
+  /* ---------- volver al sitio cuando hay sesión ---------- */
+  function finish() {
+    if (finishing) return;
+    finishing = true;
+    show("done");
+    var dest = A.withParam(next, "listo", "1");
+    location.replace(dest);
+  }
+
+  /* ---------- entrar ---------- */
+  $("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = $("loginEmail").value.trim(), pw = $("loginPw").value;
+    err("loginErr", "");
+    if (!validEmail(email)) { mark($("loginEmail"), true); err("loginErr", "Escribe un correo válido."); $("loginEmail").focus(); return; }
+    if (!pw) { mark($("loginPw"), true); err("loginErr", "Escribe tu contraseña."); $("loginPw").focus(); return; }
+    var btn = $("loginBtn"); busyBtn(btn, true, "Entrando…");
+    sb.auth.signInWithPassword({ email: email, password: pw }).then(function (r) {
+      if (r.error) {
+        busyBtn(btn, false, "Entrar");
+        err("loginErr", A.translate(r.error));
+        if ((r.error.code || "") === "email_not_confirmed") { pendingEmail = email; }
+        return;
+      }
+      finish();
+    }).catch(function (x) { busyBtn(btn, false, "Entrar"); err("loginErr", A.translate(x)); });
+  });
+
+  /* ---------- crear cuenta ---------- */
+  var pendingEmail = "", resendType = "signup";
+  $("signupForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = $("suName").value.trim(), email = $("suEmail").value.trim(), pw = $("suPw").value;
+    err("signupErr", "");
+    if (!name) { mark($("suName"), true); err("signupErr", "Escribe tu nombre."); $("suName").focus(); return; }
+    if (!validEmail(email)) { mark($("suEmail"), true); err("signupErr", "Escribe un correo válido."); $("suEmail").focus(); return; }
+    if (pw.length < 8) { mark($("suPw"), true); err("signupErr", "La contraseña necesita al menos 8 caracteres."); $("suPw").focus(); return; }
+    if (!$("consent").checked) { $("consentRow").classList.add("bad"); err("signupErr", "Para crear la cuenta necesitamos tu autorización para tratar tus datos."); return; }
+    var btn = $("signupBtn"); busyBtn(btn, true, "Creando cuenta…");
+    sb.auth.signUp({
+      email: email, password: pw,
+      options: {
+        emailRedirectTo: origin + "/entrar?confirmado=1&next=" + encodeURIComponent(next),
+        // Prueba de la autorización (Ley 1581): quedan guardadas la fecha y la versión de la política aceptada.
+        data: { full_name: name, autorizacion_datos: { aceptada: true, fecha: new Date().toISOString(), version_politica: A.config.POLITICA_VERSION || "" } }
+      }
+    }).then(function (r) {
+      busyBtn(btn, false, "Crear cuenta");
+      if (r.error) { err("signupErr", A.translate(r.error)); return; }
+      var d = r.data || {};
+      // Con la confirmación activada, Supabase responde "bien" aunque el correo ya exista, pero sin identidades.
+      if (d.user && Array.isArray(d.user.identities) && d.user.identities.length === 0) {
+        err("signupErr", "Ya existe una cuenta con ese correo. Entra o recupera tu contraseña.");
+        return;
+      }
+      if (d.session) { finish(); return; }
+      pendingEmail = email; resendType = "signup";
+      $("checkTitle").textContent = "Confirma tu correo";
+      $("checkText").textContent = "Te enviamos un enlace a " + email + ". Ábrelo para activar tu cuenta y entrar.";
+      show("check"); startCooldown();
+    }).catch(function (x) { busyBtn(btn, false, "Crear cuenta"); err("signupErr", A.translate(x)); });
+  });
+
+  /* ---------- Google ---------- */
+  $("googleBtn").addEventListener("click", function () {
+    var b = this; b.disabled = true;
+    sb.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: origin + "/entrar?next=" + encodeURIComponent(next) }
+    }).then(function (r) {
+      if (r.error) { b.disabled = false; err(mode === "login" ? "loginErr" : "signupErr", A.translate(r.error)); }
+    }).catch(function (x) { b.disabled = false; err(mode === "login" ? "loginErr" : "signupErr", A.translate(x)); });
+  });
+
+  /* ---------- recuperar ---------- */
+  $("toForgot").addEventListener("click", function () {
+    $("fgEmail").value = $("loginEmail").value.trim();
+    err("forgotErr", ""); show("forgot");
+    setTimeout(function () { $("fgEmail").focus(); }, 30);
+  });
+  $("forgotForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = $("fgEmail").value.trim();
+    if (!validEmail(email)) { mark($("fgEmail"), true); err("forgotErr", "Escribe un correo válido."); return; }
+    var btn = $("forgotBtn"); busyBtn(btn, true, "Enviando…");
+    sb.auth.resetPasswordForEmail(email, { redirectTo: origin + "/restablecer" }).then(function (r) {
+      busyBtn(btn, false, "Enviar enlace");
+      if (r.error) { err("forgotErr", A.translate(r.error)); return; }
+      pendingEmail = email; resendType = "recovery";
+      $("checkTitle").textContent = "Revisa tu correo";
+      // No confirmamos si el correo existe: así nadie puede averiguar quién tiene cuenta.
+      $("checkText").textContent = "Si " + email + " tiene una cuenta, te llegará un enlace para elegir una contraseña nueva. Ábrelo en este mismo navegador.";
+      show("check"); startCooldown();
+    }).catch(function (x) { busyBtn(btn, false, "Enviar enlace"); err("forgotErr", A.translate(x)); });
+  });
+
+  /* ---------- reenviar ---------- */
+  var cdTimer = null;
+  function startCooldown() {
+    var left = 60, b = $("resendBtn");
+    b.disabled = true;
+    clearInterval(cdTimer);
+    b.textContent = "Reenviar en " + left + " s";
+    cdTimer = setInterval(function () {
+      left--;
+      if (left <= 0) { clearInterval(cdTimer); b.disabled = false; b.textContent = "Reenviar correo"; }
+      else b.textContent = "Reenviar en " + left + " s";
+    }, 1000);
+  }
+  $("resendBtn").addEventListener("click", function () {
+    err("checkErr", "");
+    var p = resendType === "recovery"
+      ? sb.auth.resetPasswordForEmail(pendingEmail, { redirectTo: origin + "/restablecer" })
+      : sb.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: origin + "/entrar?confirmado=1&next=" + encodeURIComponent(next) } });
+    p.then(function (r) { if (r && r.error) err("checkErr", A.translate(r.error)); else startCooldown(); })
+     .catch(function (x) { err("checkErr", A.translate(x)); });
+  });
+
+  /* ---------- arranque ---------- */
+  var urlErr = params.get("error_description") || new URLSearchParams(location.hash.slice(1)).get("error_description");
+  if (urlErr) { setMode("login"); err("loginErr", A.translate({ message: urlErr, code: params.get("error_code") || "" })); }
+  else setMode(params.get("modo") === "entrar" || params.get("modo") === "login" ? "login" : "signup");
+
+  if (params.get("confirmado")) { $("banner").hidden = false; $("banner").textContent = "Correo confirmado. Ya puedes entrar."; setMode("login"); }
+  if (params.get("salir")) { $("banner").hidden = false; $("banner").textContent = "Cerraste sesión."; setMode("login"); }
+  if (params.get("modo") === "recuperar") { show("forgot"); }
+
+  if (A.configured) {
+    A.onChange(function (ev, s) { if (s && (ev === "SIGNED_IN" || ev === "INITIAL_SESSION")) finish(); });
+    A.session().then(function (s) { if (s) finish(); });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 # Folio PDF
 
+> Puesta en marcha (Supabase, Google, dominio): ver `CONFIGURAR.md`.
+
 Sitio estático en español para procesar PDF en el navegador. Los archivos elegidos no se suben a un backend. No hay servicios de conversión externos, analítica, historial de documentos ni almacenamiento persistente en la aplicación.
 
 ## Funciones
@@ -41,3 +43,10 @@ Los formularios admiten hasta 300 campos. No ejecutan cálculos ni scripts, no c
 ## OCR
 
 OCR de escaneos en inglés a TXT, hasta 20 páginas por operación. Motor Tesseract.js 7.0.0 y modelos servidos localmente desde vendor/ocr, sin CDN ni envío de documentos. Carga bajo demanda, cancelación y límite de dos minutos por página. No conserva formato ni crea PDF buscable. El modelo español no está incluido porque su descarga no está disponible en este entorno.
+
+## Cuenta y herramientas añadidas
+
+- Registro obligatorio con Supabase (correo y contraseña, o Google). Sin sesión, abrir una herramienta lleva a `/entrar` y luego regresa a la misma herramienta.
+- `/corregir`: corrige líneas del texto original (tapa la línea y escribe la nueva encima; el texto anterior puede seguir dentro del archivo), añade texto y tapa zonas.
+- `/corregir?modo=contrasena`: pone, cambia o quita contraseñas con qpdf-wasm 0.3.0.
+- Librerías de esta página en `dist/vendor/corregir/`: pdf.js 3.11.174 legacy, pdf-lib 1.17.1 y qpdf-wasm 0.3.0 (mismos archivos que publica npm).

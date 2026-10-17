@@ -6,3 +6,18 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important}}
 
 .form-field-count{font-size:12px;color:#617b55;margin:0 0 20px}.option-field:has(input:disabled),.option-field:has(select:disabled),.option-field:has(textarea:disabled){opacity:.65}.option-field select[multiple]{min-height:110px}.option-field select[multiple] option{padding:6px}.option-field>span{overflow-wrap:anywhere}
+
+/* ---- cuenta ---- */
+.nav-right{display:flex;align-items:center;gap:22px}
+.nav-auth{display:flex;align-items:center;gap:14px;font-size:13px;font-weight:600}
+.nav-login:hover{color:var(--accent)}
+.nav-cta{min-height:40px;padding:10px 16px;color:#fff;background:var(--accent)}
+.nav-cta:hover{background:var(--accent-dark)}
+.nav-user{display:flex;align-items:center;gap:10px}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:#fdeee8;color:var(--accent-dark);display:grid;place-items:center;font-weight:700;font-size:13px}
+.nav-name{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-logout{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:650}
+.nav-logout:hover{border-color:var(--accent);color:var(--accent)}
+@media(max-width:1100px){.nav-right{gap:14px}}
+@media(max-width:850px){nav a:nth-child(3){display:none}.nav-name{display:none}}
+@media(max-width:620px){nav{display:none}.nav-auth{gap:10px;font-size:12px}.nav-cta{min-height:36px;padding:8px 12px;font-size:11px}}

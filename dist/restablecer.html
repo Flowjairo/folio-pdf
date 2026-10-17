@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nueva contraseña · Folio PDF</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/base.css">
+<style>
+/* Layout: misma tarjeta centrada que /entrar, con tres estados: comprobando el enlace, formulario, listo. */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:460px;margin:0 auto;padding-block:22px 10px}
+.wrap{max-width:460px;margin:12px auto 0}
+.card-shell{border-radius:38px;padding:7px}
+.card{border-radius:31px;padding:30px 28px 26px;display:flex;flex-direction:column;gap:18px}
+@media (max-width:440px){.card{padding:24px 20px 22px}}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,6vw,34px);letter-spacing:-.045em;line-height:1.05;margin:0;text-wrap:balance}
+.lede{margin:0;color:var(--ink-soft);font-size:15.5px}
+form{display:flex;flex-direction:column;gap:16px;margin:0}
+.busy{display:inline-flex;align-items:center;gap:10px;color:var(--ink-soft)}
+.big-ico{width:60px;height:60px;border-radius:19px;display:grid;place-items:center}
+.big-ico svg{width:28px;height:28px}
+.tone-ok{background:var(--ok-wash);color:var(--ok)}
+.tone-danger{background:var(--danger-wash);color:var(--danger)}
+.view{display:flex;flex-direction:column;gap:18px}
+</style>
+<script src="/config.js"></script>
+<script src="/vendor/supabase.js"></script>
+<script src="/auth.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/" aria-label="Folio PDF, inicio"><span class="mk"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M10 7h13v18H10z" stroke="currentColor" stroke-width="2"/><path d="M6 21V4h13M14 13h5m-5 5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span>folio<span class="p">PDF</span><span class="d">.</span></span></a>
+  <a class="link" href="/entrar?modo=entrar">Entrar</a>
+</header>
+
+<main class="wrap">
+  <div class="bezel card-shell">
+    <div class="core card">
+      <section class="view" id="vWait"><span class="busy"><span class="spin"></span>Comprobando el enlace…</span></section>
+
+      <section class="view" id="vForm" hidden>
+        <div><h1>Elige una contraseña nueva</h1></div>
+        <form id="form" novalidate>
+          <div class="field">
+            <label for="pw1">Contraseña nueva</label>
+            <div class="pw"><input type="password" id="pw1" autocomplete="new-password" minlength="8" required><button class="eye" type="button" data-eye="pw1" aria-label="Mostrar u ocultar la contraseña">Ver</button></div>
+            <p class="fine">Mínimo 8 caracteres. Mezcla letras y números.</p>
+          </div>
+          <div class="field">
+            <label for="pw2">Repítela</label>
+            <div class="pw"><input type="password" id="pw2" autocomplete="new-password" required><button class="eye" type="button" data-eye="pw2" aria-label="Mostrar u ocultar la contraseña">Ver</button></div>
+          </div>
+          <p class="note err" id="err" hidden role="alert"></p>
+          <button class="cta cta-lg cta-wide" type="submit" id="btn"><span class="lbl">Guardar contraseña</span><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></span></button>
+        </form>
+      </section>
+
+      <section class="view" id="vBad" hidden>
+        <div class="big-ico tone-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16h.01"></path></svg></div>
+        <h1>Este enlace ya no sirve</h1>
+        <p class="lede" id="badText">Venció, ya se usó o se abrió en otro navegador. Pide uno nuevo y ábrelo en este mismo navegador.</p>
+        <a class="cta cta-lg cta-wide" href="/entrar?modo=recuperar"><span>Pedir un enlace nuevo</span><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></span></a>
+      </section>
+
+      <section class="view" id="vOk" hidden>
+        <div class="big-ico tone-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></div>
+        <h1>Contraseña actualizada</h1>
+        <p class="lede">Ya quedaste dentro. Te llevamos al editor…</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var A = window.TallerAuth, sb = A.client;
+  var $ = function (id) { return document.getElementById(id); };
+  function show(id) { ["vWait", "vForm", "vBad", "vOk"].forEach(function (v) { $(v).hidden = v !== id; }); }
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-eye]"), function (b) {
+    b.addEventListener("click", function () {
+      var i = $(b.getAttribute("data-eye")), hidden = i.type === "password";
+      i.type = hidden ? "text" : "password"; b.textContent = hidden ? "Ocultar" : "Ver"; i.focus();
+    });
+  });
+
+  if (!A.configured) { $("badText").textContent = "El inicio de sesión todavía no está configurado en este sitio."; show("vBad"); return; }
+
+  var params = new URLSearchParams(location.search), hash = new URLSearchParams(location.hash.slice(1));
+  var urlErr = params.get("error_description") || hash.get("error_description");
+  if (urlErr) { $("badText").textContent = A.translate({ message: urlErr, code: params.get("error_code") || hash.get("error_code") || "" }); show("vBad"); return; }
+
+  var ready = false;
+  function ok() { if (ready) return; ready = true; show("vForm"); setTimeout(function () { $("pw1").focus(); }, 30); }
+  A.onChange(function (ev, s) { if (s && (ev === "PASSWORD_RECOVERY" || ev === "SIGNED_IN" || ev === "INITIAL_SESSION")) ok(); });
+  A.session().then(function (s) { if (s) ok(); });
+  // Si en unos segundos no hay sesión, el enlace no era válido para este navegador.
+  setTimeout(function () { if (!ready) show("vBad"); }, 6000);
+
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var a = $("pw1").value, b = $("pw2").value, er = $("err");
+    er.hidden = true;
+    if (a.length < 8) { er.hidden = false; er.textContent = "La contraseña necesita al menos 8 caracteres."; $("pw1").focus(); return; }
+    if (a !== b) { er.hidden = false; er.textContent = "Las dos contraseñas no coinciden."; $("pw2").select(); return; }
+    var btn = $("btn"); btn.disabled = true; btn.querySelector(".lbl").textContent = "Guardando…";
+    sb.auth.updateUser({ password: a }).then(function (r) {
+      if (r.error) { btn.disabled = false; btn.querySelector(".lbl").textContent = "Guardar contraseña"; er.hidden = false; er.textContent = A.translate(r.error); return; }
+      show("vOk");
+      setTimeout(function () { location.replace("/?listo=1"); }, 1400);
+    }).catch(function (x) { btn.disabled = false; btn.querySelector(".lbl").textContent = "Guardar contraseña"; er.hidden = false; er.textContent = A.translate(x); });
+  });
+})();
+</script>
+</body>
+</html>

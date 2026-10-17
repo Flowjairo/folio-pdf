@@ -1,0 +1,103 @@
+/* Folio PDF · estilos compartidos por entrar, restablecer y páginas legales.
+   Paleta de Folio (crema, coral y verde). */
+:root{
+  --bg:#fbfcf9; --surface:#FFFFFF; --surface-2:#f4f6f1;
+  --ink:#26312f; --ink-soft:#5f6965; --ink-faint:#8b938f;
+  --hair:rgba(38,49,47,.08); --hair-strong:rgba(38,49,47,.14);
+  --shell:rgba(38,49,47,.035); --hl:rgba(255,255,255,.95);
+  --glass:rgba(255,255,255,.80); --glass-strong:rgba(251,252,249,.92);
+  --primary:#ee674b; --primary-hover:#cc4c32; --primary-ink:#FFFFFF; --primary-wash:#fdeee8; --orb:rgba(255,255,255,.2);
+  --mark:#f6c86a; --mark-band:#fbe1a8;
+  --ok:#3f6b55; --ok-wash:#e8f2ea;
+  --warn:#8a5a12; --warn-wash:#fcf2df;
+  --danger:#b8402c; --danger-wash:#fce9e4; --danger-ink:#FFFFFF;
+  --night:#26312f; --night-ink:#f4f6f1; --night-soft:#9aa39e;
+  --paper:#FFFFFF; --paper-ink:#26312f; --paper-line:#e6e9e5;
+  --stage:#eef0eb; --scrim:rgba(38,49,47,.30);
+  --shadow-soft:0 1px 1px rgba(38,49,47,.02),0 24px 48px -26px rgba(38,49,47,.16),0 60px 120px -60px rgba(238,103,75,.14);
+  --shadow-float:0 2px 4px rgba(38,49,47,.03),0 40px 90px -36px rgba(38,49,47,.28);
+  --ease:cubic-bezier(.23,1,.32,1);
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --ease-drawer:cubic-bezier(.32,.72,0,1);
+  --spring:cubic-bezier(.34,1.38,.64,1);
+  --display:Arial,Helvetica,sans-serif;
+  --body:Arial,Helvetica,sans-serif;
+  --r-shell:22px; --r-core:18px;
+}
+
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--body);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 32px;
+}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+a{color:var(--primary)}
+svg{flex:none}
+
+.bezel{background:var(--shell);border-radius:var(--r-shell);padding:6px;box-shadow:inset 0 0 0 1px var(--hair)}
+.core{background:var(--surface);border-radius:var(--r-core);box-shadow:inset 0 1px 0 var(--hl),0 0 0 1px var(--hair),var(--shadow-soft)}
+
+.cta{display:inline-flex;align-items:center;justify-content:space-between;gap:14px;padding:7px 7px 7px 24px;border-radius:999px;border:none;cursor:pointer;
+  background:var(--primary);color:var(--primary-ink);font-weight:600;font-size:16px;white-space:nowrap;text-decoration:none;
+  box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 14px 30px -14px var(--primary);
+  transition:transform 160ms var(--ease-out),background-color 150ms ease,box-shadow 200ms ease}
+.cta:hover:not(:disabled){background:var(--primary-hover)}
+.cta:active:not(:disabled){transform:scale(.97)}
+.cta:disabled{opacity:.55;cursor:default}
+.orb{width:36px;height:36px;border-radius:50%;background:var(--orb);display:grid;place-items:center;transition:transform 200ms var(--ease-out)}
+.orb svg{width:17px;height:17px}
+.cta:hover:not(:disabled) .orb{transform:translate(3px,-1px) scale(1.06)}
+.cta-lg{font-size:17px;padding:8px 8px 8px 28px}
+.cta-lg .orb{width:42px;height:42px}
+.cta-wide{width:100%}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 20px;border-radius:999px;border:none;cursor:pointer;
+  background:var(--surface);color:var(--ink);font-weight:600;font-size:15.5px;box-shadow:inset 0 0 0 1px var(--hair-strong);text-decoration:none;
+  transition:background-color 150ms ease,transform 160ms var(--ease-out)}
+.pill:hover:not(:disabled){background:var(--surface-2)}
+.pill:active:not(:disabled){transform:scale(.97)}
+.pill:disabled{opacity:.5;cursor:default}
+.link{background:none;border:none;color:var(--ink-soft);font-weight:500;font-size:14.5px;cursor:pointer;padding:6px 10px;border-radius:999px;text-decoration:none;transition:background-color 150ms ease,color 150ms ease}
+.link:hover{color:var(--ink);background:var(--shell)}
+.link.strong{color:var(--primary);font-weight:600}
+.brand{display:inline-flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.03em;color:var(--ink);text-decoration:none}
+.brand svg{width:30px;height:30px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0;padding:6px 12px;border-radius:999px;font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface);box-shadow:inset 0 0 0 1px var(--hair-strong)}
+.eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--primary);display:block;box-shadow:0 0 0 3px var(--primary-wash)}
+
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:8px}
+.input,.pw{display:flex;gap:6px;padding:5px;border-radius:999px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--hair-strong);transition:box-shadow 150ms ease}
+.input:focus-within,.pw:focus-within{box-shadow:inset 0 0 0 1.5px var(--primary),0 0 0 5px var(--primary-wash)}
+.input.bad,.pw.bad{box-shadow:inset 0 0 0 1.5px var(--danger),0 0 0 5px var(--danger-wash)}
+.input input,.pw input{flex:1;min-width:0;font-size:16px;padding:9px 14px;border:none;background:transparent;color:var(--ink);outline:none}
+.eye{flex:none;border:none;background:var(--surface);color:var(--ink-soft);border-radius:999px;padding:0 16px;font-weight:500;font-size:13.5px;cursor:pointer;box-shadow:0 0 0 1px var(--hair)}
+.eye:hover{color:var(--ink)}
+.field .fine{margin-top:8px;padding-left:4px}
+.note{margin:0;padding:13px 16px;border-radius:16px;font-size:14px;line-height:1.45}
+.note.ok{background:var(--ok-wash);color:var(--ok)}
+.note.warn{background:var(--warn-wash);color:var(--warn)}
+.note.err{background:var(--danger-wash);color:var(--danger)}
+.note.info{background:var(--shell);color:var(--ink-soft)}
+.fine{font-size:13.5px;color:var(--ink-soft);margin:0}
+.spin{width:18px;height:18px;border-radius:50%;border:2px solid var(--hair-strong);border-top-color:var(--primary);animation:sp .6s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.foot{margin-top:28px;padding-block:24px 8px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;color:var(--ink-faint);font-size:13.5px;border-top:1px solid var(--hair)}
+.foot a{color:var(--ink-soft);text-decoration:none}
+.foot a:hover{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.cta:active,.pill:active{transform:none}.cta:hover .orb{transform:none}}
+
+/* ---- marca Folio ---- */
+.brand{gap:9px;font-family:var(--display);font-weight:750;font-size:24px;letter-spacing:-1.2px}
+.brand .mk{background:var(--primary);border-radius:8px;color:#fff;width:31px;height:33px;display:grid;place-items:center;transform:rotate(-4deg)}
+.brand .mk svg{width:24px;height:24px}
+.brand .p{font-size:12px;letter-spacing:-.2px;margin-left:5px;font-weight:600}
+.brand .d{color:var(--primary)}
+h1,h2{letter-spacing:-.04em}
