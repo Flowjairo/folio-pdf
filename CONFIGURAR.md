@@ -72,6 +72,8 @@ Los correos de confirmación y de recuperación salen desde `no-responder@foliop
   usuario `resend`, contraseña = clave de Resend «Supabase Folio» (solo envío), remitente «Folio PDF».
 - **Confirm email:** activado en **Authentication → Sign In / Providers**.
 - Si cambias la clave de Resend, pégala de nuevo en el campo *Password* de SMTP Settings.
+- **Texto de los correos:** se edita en Supabase → **Authentication → Emails → Templates** (no en Resend).
+  Copia de las plantillas con el botón «Verificar mi correo» en `correos/` (ver `correos/ASUNTOS.md`).
 - Dominio en GoDaddy: A `@` → `216.198.79.1`, CNAME `www` → `b7fbbcde71ca0269.vercel-dns-017.com`.
 
 ## 4. Inicio con Google ✅

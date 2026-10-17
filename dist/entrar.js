@@ -142,7 +142,8 @@
       if (d.session) { finish(); return; }
       pendingEmail = email; resendType = "signup";
       $("checkTitle").textContent = "Confirma tu correo";
-      $("checkText").textContent = "Te enviamos un enlace a " + email + ". Ábrelo para activar tu cuenta y entrar.";
+      $("checkText").textContent = "Te enviamos un enlace a " + email + ". Pulsa «Verificar mi correo» en ese mensaje. Si lo abres en este mismo navegador, entrarás solo.";
+      $("checkedBtn").hidden = false;
       show("check"); startCooldown();
     }).catch(function (x) { busyBtn(btn, false, "Crear cuenta"); err("signupErr", A.translate(x)); });
   });
@@ -173,6 +174,7 @@
       busyBtn(btn, false, "Enviar enlace");
       if (r.error) { err("forgotErr", A.translate(r.error)); return; }
       pendingEmail = email; resendType = "recovery";
+      $("checkedBtn").hidden = true;
       $("checkTitle").textContent = "Revisa tu correo";
       // No confirmamos si el correo existe: así nadie puede averiguar quién tiene cuenta.
       $("checkText").textContent = "Si " + email + " tiene una cuenta, te llegará un enlace para elegir una contraseña nueva. Ábrelo en este mismo navegador.";
@@ -200,6 +202,14 @@
       : sb.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: origin + "/entrar?confirmado=1&next=" + encodeURIComponent(next) } });
     p.then(function (r) { if (r && r.error) err("checkErr", A.translate(r.error)); else startCooldown(); })
      .catch(function (x) { err("checkErr", A.translate(x)); });
+  });
+
+  // Para quien verificó desde otro dispositivo (por ejemplo, el celular): vuelve a "Entrar" con su correo listo.
+  $("checkedBtn").addEventListener("click", function () {
+    setMode("login"); show("auth");
+    $("loginEmail").value = pendingEmail;
+    $("banner").hidden = false; $("banner").textContent = "Si ya verificaste tu correo, escribe tu contraseña para entrar.";
+    setTimeout(function () { $("loginPw").focus(); }, 30);
   });
 
   /* ---------- arranque ---------- */

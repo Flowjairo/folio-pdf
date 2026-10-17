@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Confirma tu correo nuevo</title></head>
+<body style="margin:0;padding:0;background:#fbfcf9;">
+<span style="display:none;max-height:0;overflow:hidden;opacity:0;color:#fbfcf9;">Confirma el cambio de correo de tu cuenta de Folio PDF.</span>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fbfcf9;padding:32px 12px;font-family:Arial,Helvetica,sans-serif;color:#26312f;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+<tr><td style="padding:0 4px 18px;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td style="background:#ee674b;border-radius:8px;width:30px;height:32px;text-align:center;vertical-align:middle;color:#ffffff;font-weight:bold;font-size:16px;">F</td>
+<td style="padding-left:9px;font-size:22px;font-weight:bold;letter-spacing:-1px;color:#26312f;">folio<span style="font-size:11px;letter-spacing:0;margin-left:4px;">PDF</span><span style="color:#ee674b;">.</span></td>
+</tr></table>
+</td></tr>
+<tr><td style="background:#ffffff;border:1px solid #e6e9e5;border-radius:16px;padding:32px 28px;">
+<p style="margin:0 0 10px;font-size:10px;font-weight:bold;letter-spacing:1.8px;color:#8b938f;">CAMBIO DE CORREO</p>
+<h1 style="margin:0 0 14px;font-size:26px;line-height:1.15;letter-spacing:-1px;color:#26312f;">Confirma tu correo nuevo</h1>
+<p style="margin:0 0 24px;font-size:15px;line-height:1.55;color:#5f6965;">Pediste usar esta dirección en tu cuenta de Folio PDF. Pulsa el botón para confirmar el cambio.</p>
+<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="border-radius:8px;background:#ee674b;">
+<a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block;padding:14px 26px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:8px;">Confirmar correo nuevo</a>
+</td></tr></table>
+<p style="margin:22px 0 0;font-size:13px;line-height:1.5;color:#8b938f;">El enlace vence en 24 horas.</p>
+<p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#8b938f;word-break:break-all;">Si el botón no funciona, copia este enlace en tu navegador:<br><a href="{{ .ConfirmationURL }}" style="color:#cc4c32;">{{ .ConfirmationURL }}</a></p>
+</td></tr>
+<tr><td style="padding:18px 6px 0;font-size:12px;line-height:1.5;color:#8b938f;">Si no pediste este cambio, ignora este correo y tu cuenta seguirá con el correo anterior.<br>Folio PDF · <a href="https://www.foliopdf.site" style="color:#8b938f;">foliopdf.site</a></td></tr>
+</table>
+</td></tr></table>
+</body></html>
