@@ -16,12 +16,12 @@ Los PDF se procesan en el navegador; Supabase solo guarda las cuentas (nombre y 
 |---|---|
 | 1. Supabase y claves en `config.js` | ✅ Hecho |
 | 2. Direcciones permitidas en Supabase (Site URL y Redirect URLs) | ✅ Hecho |
-| 3. Correo propio (SMTP) | ⏳ Pendiente: necesita dominio |
+| 3. Correo propio (SMTP con Resend) | ✅ Hecho |
 | 4. Inicio con Google | ✅ Hecho (app publicada «En producción») |
 | 5. Contraseña mínima de 8 caracteres | ✅ Hecho |
 | 6. Datos legales y plan de Vercel | ⏳ Pendiente |
 
-**Temporal:** «Confirm email» está **desactivado** para poder probar sin correo. Vuelve a activarlo al terminar el paso 3.
+«Confirm email» está **activado**: las cuentas nuevas con correo deben confirmarlo antes de entrar.
 
 ## Archivos (dentro de `dist/`)
 
@@ -62,19 +62,17 @@ En **Authentication → URL Configuration**:
 
 Si cambias de dominio, actualiza las dos.
 
-## 3. Correo propio ⏳
+## 3. Correo propio ✅
 
-El correo de fábrica de Supabase **solo envía a los miembros de tu equipo de Supabase y como
-máximo 2 mensajes por hora**. Con eso nadie más puede confirmar su cuenta ni recuperar la contraseña.
+Los correos de confirmación y de recuperación salen desde `no-responder@foliopdf.site` por **Resend**
+(cuenta `tallerpdf.soporte@gmail.com`, plan gratis: 3.000 al mes, 100 al día).
 
-1. ✅ Dominio `foliopdf.site` conectado a Vercel (GoDaddy: A `@` → `216.198.79.1`, CNAME `www` → `b7fbbcde71ca0269.vercel-dns-017.com`).
-2. Crea una cuenta en un servicio de correo: **Resend** (gratis: 3.000 al mes, 100 al día)
-   o **Brevo** (gratis: 300 al día).
-3. Verifica el dominio en ese servicio pegando sus registros DNS (SPF, DKIM).
-4. En Supabase → **Authentication → Emails → SMTP Settings** pon servidor, usuario, contraseña
-   y un remitente tipo `no-responder@foliopdf.site`.
-5. Vuelve a activar **Confirm email** en **Authentication → Sign In / Providers → User Signups**.
-6. Actualiza el paso 2 y la marca de Google con el dominio nuevo.
+- **Resend:** dominio `foliopdf.site` verificado (región São Paulo); registros DNS puestos en GoDaddy.
+- **Supabase → Authentication → Emails → SMTP Settings:** host `smtp.resend.com`, puerto `465`,
+  usuario `resend`, contraseña = clave de Resend «Supabase Folio» (solo envío), remitente «Folio PDF».
+- **Confirm email:** activado en **Authentication → Sign In / Providers**.
+- Si cambias la clave de Resend, pégala de nuevo en el campo *Password* de SMTP Settings.
+- Dominio en GoDaddy: A `@` → `216.198.79.1`, CNAME `www` → `b7fbbcde71ca0269.vercel-dns-017.com`.
 
 ## 4. Inicio con Google ✅
 
