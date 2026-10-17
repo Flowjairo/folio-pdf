@@ -26,7 +26,7 @@ Sitio estático en español para procesar PDF en el navegador. Los archivos eleg
 
 ## Estructura
 
-`dist/index.html`, `styles.css`, `app.js`, `pdf-core.js`, `pdf-forms.js`, `icons.js`. Dependencias incluidas en `dist/vendor`: pdf-lib 1.17.1 (MIT), PDF.js 5.6.205 legacy (Apache 2.0), JSZip 3.10.1 (MIT/GPL). Licencias junto a los archivos. Sin compilación ni instalación para servir `dist` sobre HTTP(S). No abrir mediante file://, porque usa módulos y workers.
+`dist/index.html`, `styles.css`, `app.js`, `pdf-core.js`, `pdf-forms.js`, `icons.js`. Dependencias incluidas en `dist/vendor`: pdf-lib 1.17.1 (MIT), PDF.js 6.4.299 legacy (Apache 2.0), JSZip 3.10.1 (MIT/GPL). Licencias junto a los archivos. Sin compilación ni instalación para servir `dist` sobre HTTP(S). No abrir mediante file://, porque usa módulos y workers.
 
 El despliegue está configurado en `.openai/hosting.json`. Se conserva su identidad y la audiencia configurada en Sites (pública en la última consulta).
 
@@ -49,4 +49,4 @@ OCR de escaneos en inglés a TXT, hasta 20 páginas por operación. Motor Tesser
 - Registro obligatorio con Supabase (correo y contraseña, o Google). Sin sesión, abrir una herramienta lleva a `/entrar` y luego regresa a la misma herramienta.
 - `/corregir`: corrige líneas del texto original (tapa la línea y escribe la nueva encima; el texto anterior puede seguir dentro del archivo), añade texto y tapa zonas.
 - `/corregir?modo=contrasena`: pone, cambia o quita contraseñas con qpdf-wasm 0.3.0.
-- Esta página usa el mismo pdf.js 5.6.205 de `dist/vendor/` con `isEvalSupported: false` (protege contra CVE-2024-4367). En `dist/vendor/corregir/` quedan pdf-lib 1.17.1 y qpdf-wasm 0.3.0 (mismos archivos que publica npm).
+- Esta página usa el mismo pdf.js 6.4.299 de `dist/vendor/` (corrige CVE-2024-4367 y CVE-2026-16633). En `dist/vendor/corregir/` quedan pdf-lib 1.17.1 y qpdf-wasm 0.3.0 (mismos archivos que publica npm).

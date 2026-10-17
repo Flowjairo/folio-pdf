@@ -40,6 +40,12 @@ Los PDF se procesan en el navegador; Supabase solo guarda las cuentas (nombre y 
 `vercel.json` (en la raíz) publica `dist/`, activa URLs limpias (`/entrar` en vez de `/entrar.html`)
 y añade cabeceras de seguridad. Ninguna librería se carga desde un CDN.
 
+## Seguridad
+
+- **pdf.js 6.4.299** en todo el sitio. Las versiones anteriores tenían dos fallas que permitían ejecutar código con un PDF manipulado: CVE-2024-4367 (antes de 4.2.67) y CVE-2026-16633 (5.6.83 a 6.2.107).
+- **Política de seguridad de contenido (CSP)** en `vercel.json`: solo se ejecutan scripts del propio dominio (sin código en línea ni `eval`), y la página solo puede conectarse a sí misma y a Supabase. Si algún día agregas un servicio externo (pagos, analítica, anuncios), hay que añadir su dominio a la CSP o no funcionará.
+- Para revisar las librerías: actualiza las versiones en un `package.json` de prueba y ejecuta `npm audit`.
+
 ---
 
 ## 1. Supabase ✅
