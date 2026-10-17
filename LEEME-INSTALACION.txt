@@ -1,0 +1,43 @@
+FOLIO PDF — SITIO COMPLETO
+
+1. Descomprime el ZIP.
+2. Para probarlo en tu ordenador, instala Python 3 si no lo tienes.
+3. Abre una terminal en la carpeta folio-pdf y ejecuta:
+
+   python -m http.server 8080 --bind 127.0.0.1 --directory dist
+
+   En Windows también puedes usar: py -m http.server 8080 --bind 127.0.0.1 --directory dist
+4. Abre http://localhost:8080 en un navegador moderno.
+5. Para detenerlo, pulsa Ctrl+C en la terminal.
+
+No abras index.html con doble clic: los módulos y workers requieren HTTP(S).
+No hace falta compilar ni instalar paquetes npm para usar la página.
+
+PUBLICAR EN OTRO ALOJAMIENTO
+Sube el contenido de dist a la raíz de un alojamiento estático HTTPS.
+Conserva todas las carpetas vendor, cmaps, standard_fonts y wasm.
+El servidor debe servir JavaScript con su tipo MIME correcto.
+Las rutas empiezan en /; publicar en una subcarpeta requiere adaptar las rutas.
+
+CONTENIDO
+- dist: página, estilos, lógica y dependencias completas.
+- tests: pruebas de desarrollo, con dependencias del entorno de creación.
+- README.md: funciones, arquitectura, limitaciones y verificación realizada.
+
+ALCANCE
+14 herramientas. Los documentos se procesan en el navegador.
+OCR: texto impreso en inglés a TXT; hasta 20 páginas por operación.
+No incluye OCR en español, conversiones Word/Excel ni sustitución del texto original.
+El OCR puede cometer errores: revisa siempre el texto extraído.
+Las firmas son visuales, sin certificado digital.
+PDF cifrados no admitidos. Máximo 60 MB y 300 páginas salvo límite OCR.
+No hay cuentas, cobros, analítica ni servidor de procesamiento de documentos.
+
+VERIFICACIÓN
+Se probaron operaciones PDF, formularios, OCR local, cancelación y límites.
+La revisión interactiva completa en navegador y móvil está pendiente.
+Las pruebas de tests usan rutas del runtime de creación; para ejecutarlas en
+otro equipo hay que instalar y adaptar las dependencias indicadas en sus imports.
+
+LICENCIAS
+Las licencias de las dependencias se encuentran en dist/vendor.

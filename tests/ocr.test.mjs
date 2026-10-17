@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {recognizePages} from '../dist/ocr.js';
+const require=createRequire('/opt/codex/runtimes/codex-primary-runtime/dependencies/node/package.json');
+const {createCanvas}=require('@napi-rs/canvas');const {createWorker}=require('tesseract.js');
+const canvas=createCanvas(1600,500),ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,1600,500);ctx.fillStyle='black';ctx.font='48px sans-serif';ctx.fillText('FOLIO DOCUMENT TEST',70,120);ctx.fillText('Invoice number 12345',70,220);ctx.fillText('This text comes from a scanned page.',70,320);
+const image=canvas.toBuffer('image/png');
+const output=await recognizePages({indices:[0],render:async()=>image,createWorker:()=>createWorker('eng',1,{langPath:process.cwd()+'/dist/vendor/ocr',gzip:false,cacheMethod:'none',corePath:process.cwd()+'/dist/vendor/ocr/tesseract-core-lstm.wasm.js'})});
+const text=new TextDecoder().decode(output);assert.match(text,/FOLIO DOCUMENT TEST/);assert.match(text,/12345/);assert.match(text,/scanned page/);
+let terminated=0;
+await assert.rejects(recognizePages({indices:Array(21).fill(0)}),/20 páginas/);
+await assert.rejects(recognizePages({indices:[0],render:async()=>({}),createWorker:async()=>({recognize:async()=>({data:{text:''}}),terminate:async()=>{terminated++;}})}),/No se reconoció/);
+assert.equal(terminated,1);
+const controller=new AbortController();
+const cancelled=recognizePages({indices:[0],signal:controller.signal,render:async()=>({}),createWorker:async()=>({recognize:()=>new Promise(()=>{}),terminate:async()=>{terminated++;}})});
+setTimeout(()=>controller.abort(),20);await assert.rejects(cancelled,/cancelado/);assert.equal(terminated,2);
+await assert.rejects(recognizePages({indices:[0],timeoutMs:20,render:async()=>({}),createWorker:async()=>({recognize:()=>new Promise(()=>{}),terminate:async()=>{terminated++;}})}),/tardó demasiado/);assert.equal(terminated,3);
+console.log('PASS: real local OCR model recognizes image text; page limit; empty result; cancellation; timeout; worker cleanup.');

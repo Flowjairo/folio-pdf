@@ -1,0 +1,9 @@
+{
+  "name": "folio-pdf",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/ui-state.test.mjs && node tests/pdf.test.mjs && node tests/forms.test.mjs && node tests/ocr.test.mjs"
+  },
+  "description": "Buildless site; browser dependencies vendored under dist/vendor: pdf-lib 1.17.1, PDF.js 5.6.205, JSZip 3.10.1"
+}
