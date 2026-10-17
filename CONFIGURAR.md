@@ -7,8 +7,8 @@ Los PDF se procesan en el navegador; Supabase solo guarda las cuentas (nombre y 
 - **Dirección de respaldo de Vercel:** https://folio-pdf-eight.vercel.app
 - **Repositorio:** https://github.com/Flowjairo/folio-pdf (cada cambio en `main` se publica solo)
 - **Vercel:** proyecto `folio-pdf` en el equipo «Flow»
-- **Supabase:** proyecto `aihpyqkuqzxmbygxclby` (en el panel todavía se llama «Taller PDF»; es solo el nombre)
-- **Google Cloud:** proyecto con ID `taller-pdf` (el ID no se puede cambiar); la app se muestra como «Folio PDF»
+- **Supabase:** proyecto «Folio PDF» (`aihpyqkuqzxmbygxclby`)
+- **Google Cloud:** proyecto «Folio PDF» (su ID interno sigue siendo `taller-pdf` porque Google no deja cambiarlo), cliente OAuth «Folio PDF web»
 
 ## Estado
 
